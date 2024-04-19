@@ -36,14 +36,10 @@ jobs:
           distribution: 'temurin'
           java-version: 17
           architecture: x64
-      - name: Cache Maven packages
-        uses: actions/cache@v4.0.0
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2-
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@< version >
       - name: Build with Maven
-        run: mvn --no-transfer-progress verify
+        run: mvn -V
       #- name: Intall Maven plugin
       #  run: |
       #    tar -xvzf /opt/fortify/plugins/maven/maven-plugin-bin.tar.gz
