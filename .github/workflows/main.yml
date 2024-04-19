@@ -39,7 +39,9 @@ jobs:
       - name: Intall Maven plugin
         run: |
           tar -xvzf /opt/fortify/plugins/maven/maven-plugin-bin.tar.gz
-          ls -la .
+          mvn install:install-file -Dfile=pom.xml -DpomFile=pom.xml
+          mvn install:install-file -Dfile=xcodebuild/pom.xml -DpomFile=xcodebuild/pom.xml
+          mvn install:install-file -Dfile=sca-maven-plugin/sca-maven-plugin-23.1.0.jar -DpomFile=sca-maven-plugin/pom.xml
       - name: Run Fortify SCA translate
         run: sourceanalyzer -b webgoat mvn --no-transfer-progress verify
       - name: Run Fortify SCA scan
