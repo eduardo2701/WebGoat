@@ -39,7 +39,7 @@ jobs:
       - name: Intall Maven plugin
         run: |
           tar -xvzf /opt/fortify/plugins/maven/maven-plugin-bin.tar.gz
-          ls -la /opt/fortify/plugins/maven
+          ls -la .
       - name: Run Fortify SCA translate
         run: sourceanalyzer -b webgoat mvn --no-transfer-progress verify
       - name: Run Fortify SCA scan
