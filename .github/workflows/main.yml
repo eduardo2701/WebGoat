@@ -1,4 +1,4 @@
-name: Node.js Tests with Docker
+name: Scan Fortify SCA inside docker container
 
 on:
   push:
@@ -65,4 +65,4 @@ jobs:
       - name: Login SSC do lab via FCLI
         run: fcli ssc session login --url=https://ssc.evernow.com.br/ --user ${{ secrets.SSC_USER }} --password ${{ secrets.SSC_PASSWD }}
       - name: Upload artifact via FCLI
-        run: fcli ssc artifact upload --appversion=88 --file=webgoat.fpr
+        run: fcli ssc artifact upload --appversion=89 --file=webgoat.fpr
