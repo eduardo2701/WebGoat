@@ -1,4 +1,4 @@
-name: Node.js Tests with Docker
+name: Scan Fortify SCA inside docker container
 
 on:
   push:
@@ -20,18 +20,32 @@ jobs:
       - name: Testes
         run: |
           curl -v https://update.fortify.com
-          cat /etc/os-release
           yum install -y tar gzip
-          echo $PATH
-          ls -la /opt/fortify/bin
+          ls -la /opt/fortify/plugins/maven
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run fortifyupdate
         run: fortifyupdate -url https://update.fortify.com
       - name: Run Fortify SCA clean
         run: sourceanalyzer -b webgoat -clean
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          architecture: x64
+      - name: Setup Maven Action
+        uses: stCarolas/setup-maven@v5
+        with: 
+          maven-version: 3.8.2
+      - name: Intall Maven plugin
+        run: |
+          tar -xvzf /opt/fortify/plugins/maven/maven-plugin-bin.tar.gz
+          mvn install:install-file -Dfile=pom.xml -DpomFile=pom.xml
+          mvn install:install-file -Dfile=xcodebuild/pom.xml -DpomFile=xcodebuild/pom.xml
+          mvn install:install-file -Dfile=sca-maven-plugin/sca-maven-plugin-23.1.0.jar -DpomFile=sca-maven-plugin/pom.xml
       - name: Run Fortify SCA translate
-        run: sourceanalyzer -b webgoat .
+        run: sourceanalyzer -b webgoat mvn --no-transfer-progress verify
       - name: Run Fortify SCA scan
         run: sourceanalyzer -b webgoat -scan -f webgoat.fpr
       - name: Setup Fortify tools
@@ -47,4 +61,4 @@ jobs:
       - name: Login SSC do lab via FCLI
         run: fcli ssc session login --url=https://ssc.evernow.com.br/ --user ${{ secrets.SSC_USER }} --password ${{ secrets.SSC_PASSWD }}
       - name: Upload artifact via FCLI
-        run: fcli ssc artifact upload --appversion=88 --file=webgoat.fpr
+        run: fcli ssc artifact upload --appversion=89 --file=webgoat.fpr
