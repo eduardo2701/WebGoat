@@ -3,10 +3,10 @@ name: Scan Fortify SCA inside docker container
 on:
   push:
     branches:
-      - dev
+      - main
   pull_request:
     branches:
-      - dev
+      - main
 jobs:
   container-test-job:
     runs-on: ubuntu-latest
@@ -20,9 +20,7 @@ jobs:
       - name: Testes
         run: |
           curl -v https://update.fortify.com
-          cat /etc/os-release
           yum install -y tar gzip
-          echo $PATH
           ls -la /opt/fortify/plugins/maven
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,8 +38,6 @@ jobs:
         uses: stCarolas/setup-maven@v5
         with: 
           maven-version: 3.8.2
-      #- name: Build with Maven 
-      #  run: mvn -V
       - name: Intall Maven plugin
         run: |
           tar -xvzf /opt/fortify/plugins/maven/maven-plugin-bin.tar.gz
